@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <span th:replace="fragments :: bootstrapImport"></span>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <!-- header -->
 <div th:replace="fragments :: header"></div>
-<h1>Accueil</h1>
-<h2>Content</h2>
+<!-- contenu -->
+<main class="flex-grow-1 container my-5">
+    <h1>Accueil</h1>
+    <h2>Content</h2>
+</main>
 <!-- footer -->
 <div th:replace="fragments :: footer"></div>
 </body>

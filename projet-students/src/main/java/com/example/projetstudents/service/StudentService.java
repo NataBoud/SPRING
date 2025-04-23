@@ -14,25 +14,44 @@ public class StudentService {
 
         Student studentA = Student.builder()
                 .id(UUID.randomUUID())
-                .name("Toto Toto")
+                .name("Emma Dupont")
                 .age(20)
-                .email("toto@email.com").build();
+                .email("emma.dupont@example.com")
+                .build();
 
         Student studentB = Student.builder()
                 .id(UUID.randomUUID())
-                .name("Tata Tata")
+                .name("Lucas Martin")
                 .age(19)
-                .email("tata@email.com").build();
+                .email("lucas.martin@example.com")
+                .build();
 
         Student studentC = Student.builder()
                 .id(UUID.randomUUID())
-                .name("Titi Titi")
-                .age(19)
-                .email("titi@email.com").build();
+                .name("Sofia Bernard")
+                .age(21)
+                .email("sofia.bernard@example.com")
+                .build();
+
+        Student studentD = Student.builder()
+                .id(UUID.randomUUID())
+                .name("Elena Renard")
+                .age(21)
+                .email("sofia.bernard@example.com")
+                .build();
+
+        Student studentE = Student.builder()
+                .id(UUID.randomUUID())
+                .name("Victor Berd")
+                .age(21)
+                .email("sofia.bernard@example.com")
+                .build();
 
         students.put(studentA.getId(), studentA);
         students.put(studentB.getId(), studentB);
         students.put(studentC.getId(), studentC);
+        students.put(studentD.getId(), studentD);
+        students.put(studentE.getId(), studentE);
     }
     public List<Student> getAllStudents() {
         return students.values().stream().toList() ;
@@ -40,5 +59,14 @@ public class StudentService {
 
     public Student getStudentById(UUID id) {
         return students.get(id);
+    }
+
+    public Student getStudentByName(String name) {
+        return students.values().stream().filter(student -> student.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public void addStudent(Student student) {
+        student.setId(UUID.randomUUID());
+        students.put(student.getId(), student);
     }
 }
