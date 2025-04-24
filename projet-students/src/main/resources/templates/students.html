@@ -32,8 +32,7 @@
             <th>Âge</th>
             <th>Email</th>
             <th>Détails</th>
-            <th>Modifier</th>
-            <th>Supprimer</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -51,8 +50,7 @@
                 <a th:href="@{/update/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-info">
                     Modifier
                 </a>
-            </td>
-            <td>
+
                 <a th:href="@{/delete/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-danger">
                     Supprimer
                 </a>

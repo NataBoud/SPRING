@@ -18,26 +18,26 @@
 
     <!-- Formulaire d'inscription -->
     <form th:action="@{/add}" th:object="${student}" method="post" class="card p-4 shadow-sm">
+        <input th:field="*{id}" type="hidden">
         <div class="mb-3">
             <label for="nameStudent" class="form-label">Nom :</label>
-            <input type="text" id="nameStudent" th:field="*{name}" class="form-control" required />
+            <input type="text" id="nameStudent" th:field="*{name}" class="form-control" />
         </div>
+        <span class="alert alert-danger my-2" role="alert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
         <div class="mb-3">
             <label for="age" class="form-label">Âge :</label>
-            <input type="number" id="age" th:field="*{age}" class="form-control" min="0" required />
+            <input type="number" id="age" th:field="*{age}" class="form-control" min="0" />
         </div>
+        <span class="alert alert-danger my-2" role="alert" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email :</label>
             <input type="email" id="email" th:field="*{email}" class="form-control" required />
         </div>
-
-        <button type="submit" class="ms-auto mt-4 btn btn-primary">S'inscrire</button>
+        <button type="submit" class="ms-auto mt-4 btn btn-primary" th:text="${student.getId() != null ? 'Modifier' : 'Ajouter'}"></button>
     </form>
-
 </main>
-
 <!-- footer -->
 <div th:replace="fragments :: footer"></div>
 

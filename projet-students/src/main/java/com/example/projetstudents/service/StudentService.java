@@ -68,8 +68,13 @@ public class StudentService {
     }
 
     public void addStudent(Student student) {
-        student.setId(UUID.randomUUID());
-        students.put(student.getId(), student);
+        // Si l'ID existe déjà, on remplace l'étudiant
+        if (student.getId() != null && students.containsKey(student.getId())) {
+            students.put(student.getId(), student); // mise à jour
+        } else {
+            student.setId(UUID.randomUUID()); // si nouvel étudiant
+            students.put(student.getId(), student); // ajout
+        }
     }
 
     public void deleteStudent(UUID id) {

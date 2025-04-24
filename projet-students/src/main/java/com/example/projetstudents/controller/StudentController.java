@@ -3,8 +3,10 @@ package com.example.projetstudents.controller;
 
 import com.example.projetstudents.model.Student;
 import com.example.projetstudents.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,10 +44,13 @@ public class StudentController {
         return "inscription";
     }
 
-
     @PostMapping("/add")
-    public String add(@ModelAttribute("student") Student student) {
-        studentService.addStudent(student);
+    public String add(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "inscription";
+        } else {
+            studentService.addStudent(student);
+        }
         return "redirect:/students";
     }
 
@@ -67,7 +72,6 @@ public class StudentController {
     }
 
 
-    // Suite Crud
     @RequestMapping("/update/{studentId}")
     public String update(@PathVariable UUID studentId) {
         return "redirect:/form?studentId=" + studentId;
