@@ -16,51 +16,56 @@
         <a th:href="@{/}"><button class="btn btn-text" type="button">Retour à l'accueil</button></a>
     </div>
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a th:href="@{/form}" class="btn btn-dark">
+        Nouvel étudient <i class="bi bi-plus"></i>
+    </a>
+    <form th:action="@{/students}" role="search" method="get" class="d-flex justify-content-between align-items-center gap-2">
 
-    <form th:action="@{/students}" role="search" method="get">
-        <div class="d-flex justify-content-between align-items-center mb-3 gap-4">
             <input type="text" class="form-control" th:name="search" placeholder="Rechercher un étudiant" aria-label="search">
-            <button type="submit" class="btn btn-primary">Rechercher</button>
-        </div>
+            <button type="submit" class="btn btn-dark">Rechercher</button>
+
     </form>
+</div>
 
+<table th:unless="${students.isEmpty()}" class="table table-striped table-hover mt-4">
+    <thead class="thead-light">
+    <tr>
+        <th>Nom</th>
+        <th>Âge</th>
+        <th>Email</th>
+        <th>Détails</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.name}" >Nom</td>
+        <td th:text="${student.age}">Âge</td>
+        <td th:text="${student.email}">Email</td>
+        <td>
+            <a th:href="@{/detail/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-success m-1" title="Voir">
+                <i class="bi bi-file-earmark-text"></i>
+            </a>
 
-    <table th:unless="${students.isEmpty()}" class="table table-striped table-hover mt-4">
-        <thead class="table-dark">
-        <tr>
-            <th>Nom</th>
-            <th>Âge</th>
-            <th>Email</th>
-            <th>Détails</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="student : ${students}">
-            <td th:text="${student.name}">Nom</td>
-            <td th:text="${student.age}">Âge</td>
-            <td th:text="${student.email}">Email</td>
-            <td>
-                <a th:href="@{/detail/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-success">
-                    Voir
-                </a>
-            </td>
+        </td>
 
-            <td>
-                <a th:href="@{/update/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-info">
-                    Modifier
-                </a>
+        <td>
+            <a th:href="@{/update/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-dark m-1" title="Modifier">
+                <i class="bi bi-pencil-square"></i>
+            </a>
 
-                <a th:href="@{/delete/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-danger">
-                    Supprimer
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div th:if="${noResult}" class="alert alert-danger" role="alert">
-        Aucun étudiant ne correspond à la recherche "<span th:text="${search}"></span>".
-    </div>
+            <a th:href="@{/delete/{studentId}(studentId=${student.id})}" class="btn btn-sm btn-outline-danger m-1" title="Supprimer">
+                <i class="bi bi-trash"></i>
+            </a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+<div th:if="${noResult}" class="alert alert-danger" role="alert">
+    Aucun étudiant ne correspond à la recherche "<span th:text="${search}"></span>".
+</div>
 </main>
 
 <!-- footer -->

@@ -1,5 +1,6 @@
 package com.example.projetstudents.service;
 
+import com.example.projetstudents.dao.StudentRepository;
 import com.example.projetstudents.model.Student;
 import org.springframework.stereotype.Service;
 
@@ -7,77 +8,35 @@ import java.util.*;
 
 @Service
 public class StudentService {
-    private final Map<UUID, Student> students;
+    private final StudentRepository studentRepository;
 
-    public StudentService() {
-        students = new HashMap<>();
-
-        Student studentA = Student.builder()
-                .id(UUID.randomUUID())
-                .name("Emma Dupont")
-                .age(20)
-                .email("emma.dupont@example.com")
-                .build();
-
-        Student studentB = Student.builder()
-                .id(UUID.randomUUID())
-                .name("Lucas Martin")
-                .age(19)
-                .email("lucas.martin@example.com")
-                .build();
-
-        Student studentC = Student.builder()
-                .id(UUID.randomUUID())
-                .name("Sofia Bernard")
-                .age(21)
-                .email("sofia.bernard@example.com")
-                .build();
-
-        Student studentD = Student.builder()
-                .id(UUID.randomUUID())
-                .name("Elena Renard")
-                .age(21)
-                .email("sofia.bernard@example.com")
-                .build();
-
-        Student studentE = Student.builder()
-                .id(UUID.randomUUID())
-                .name("Victor Berd")
-                .age(21)
-                .email("sofia.bernard@example.com")
-                .build();
-
-        students.put(studentA.getId(), studentA);
-        students.put(studentB.getId(), studentB);
-        students.put(studentC.getId(), studentC);
-        students.put(studentD.getId(), studentD);
-        students.put(studentE.getId(), studentE);
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
+
     public List<Student> getAllStudents() {
-        return students.values().stream().toList() ;
-    }
-
-    public Student getStudentById(UUID id) {
-        return students.get(id);
-    }
-
-    public List<Student> getStudentsByName(String name) {
-        return students.values().stream()
-                .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
+        return studentRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Student::getId).reversed())
                 .toList();
     }
 
-    public void addStudent(Student student) {
-        // Si l'ID existe déjà, on remplace l'étudiant
-        if (student.getId() != null && students.containsKey(student.getId())) {
-            students.put(student.getId(), student); // mise à jour
-        } else {
-            student.setId(UUID.randomUUID()); // si nouvel étudiant
-            students.put(student.getId(), student); // ajout
-        }
+    public Optional<Student> getStudentById(Integer id) {
+        return studentRepository.findById(id);
     }
 
-    public void deleteStudent(UUID id) {
-        students.remove(id);
+    public List<Student> getStudentsByName(String name) {
+//        return studentRepository.findAll().stream()
+//                .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
+//                .toList();
+        return studentRepository.findAllByName(name);
+    }
+
+    public void addOrUpdateStudent(Student student) {
+        studentRepository.save(student);
+    }
+
+    public void deleteStudent(Integer id) {
+        studentRepository.deleteById(id);
     }
 }
