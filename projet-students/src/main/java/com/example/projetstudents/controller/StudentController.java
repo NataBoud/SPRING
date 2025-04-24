@@ -32,32 +32,51 @@ public class StudentController {
     }
 
     @RequestMapping("/form")
-    public String form(Model model) {
-        model.addAttribute("student", new Student());
+    public String form(@RequestParam(value = "studentId", required = false) UUID studentId, Model model) {
+        if (studentId != null) {
+            Student existingStudent = studentService.getStudentById(studentId);
+            model.addAttribute("student", existingStudent);
+        } else {
+            model.addAttribute("student", new Student());
+        }
         return "inscription";
     }
 
+
     @PostMapping("/add")
     public String add(@ModelAttribute("student") Student student) {
-//        System.out.println(student);
         studentService.addStudent(student);
         return "redirect:/students";
     }
 
     @RequestMapping("/students")
-    public String students(Model model) {
-        model.addAttribute("students", studentService.getAllStudents());
+    public String listStudents(@RequestParam(name = "search", required = false) String search, Model model ) {
+       List<Student> students;
+
+        if (search == null || search.isBlank()) {
+            students = studentService.getAllStudents();
+        } else {
+            students = studentService.getStudentsByName(search);
+            model.addAttribute("search", search);
+            if (students.isEmpty()) {
+                model.addAttribute("noResult", true);
+            }
+        }
+        model.addAttribute("students", students);
         return "students";
     }
 
-    @RequestMapping("/search")
-    public String searchContact(@RequestParam(name = "studentName", required = false) String name, Model model) {
-        Student student = studentService.getStudentByName(name);
-        model.addAttribute("student", student);
-        return "details";
+
+    // Suite Crud
+    @RequestMapping("/update/{studentId}")
+    public String update(@PathVariable UUID studentId) {
+        return "redirect:/form?studentId=" + studentId;
     }
-//    @RequestMapping("/inscription")
-//    public String inscription() {
-//        return "inscription";
-//    }
+
+    @RequestMapping("/delete/{studentId}")
+    public String delete(@PathVariable UUID studentId) {
+        studentService.deleteStudent(studentId);
+        return "redirect:/students";
+    }
+
 }

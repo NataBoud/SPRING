@@ -61,12 +61,18 @@ public class StudentService {
         return students.get(id);
     }
 
-    public Student getStudentByName(String name) {
-        return students.values().stream().filter(student -> student.getName().equals(name)).findFirst().orElse(null);
+    public List<Student> getStudentsByName(String name) {
+        return students.values().stream()
+                .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
+                .toList();
     }
 
     public void addStudent(Student student) {
         student.setId(UUID.randomUUID());
         students.put(student.getId(), student);
+    }
+
+    public void deleteStudent(UUID id) {
+        students.remove(id);
     }
 }
