@@ -26,10 +26,7 @@ public class StudentService {
     }
 
     public List<Student> getStudentsByName(String name) {
-//        return studentRepository.findAll().stream()
-//                .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
-//                .toList();
-        return studentRepository.findAllByName(name);
+        return studentRepository.findAllByNameContaining(name);
     }
 
     public void addOrUpdateStudent(Student student) {

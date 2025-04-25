@@ -29,4 +29,6 @@ public class Student {
     private int age;
     @Pattern(regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,}$", message = "Format de l'email invalide")
     private String email;
+
+    private String image;
 }

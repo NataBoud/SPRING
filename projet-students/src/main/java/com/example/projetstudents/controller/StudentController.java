@@ -8,14 +8,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class StudentController {
     private final StudentService studentService;
+    private String location = "src/main/resources/static/images";
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -51,15 +61,23 @@ public class StudentController {
 
     // Create ou Update
     @PostMapping("/add")
-    public String add(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "inscription";
-        } else {
-            studentService.addOrUpdateStudent(student);
-        }
+    public String add(
+            @Valid @ModelAttribute("student") Student student,
+            BindingResult bindingResult,
+            @RequestParam("image")MultipartFile image
+    ) throws IOException {
+//        if (bindingResult.hasErrors()) {
+//            return "inscription";
+//        }
+
+        Path destination = Paths.get(location).resolve(image.getOriginalFilename()).toAbsolutePath();
+        student.setImage(image.getOriginalFilename());
+        InputStream inputStream = image.getInputStream();
+        Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
+        studentService.addOrUpdateStudent(student);
+
         return "redirect:/students";
     }
-
 
     @RequestMapping("/students")
     public String listStudents(@RequestParam(name = "search", required = false) String search, Model model ) {
@@ -77,7 +95,6 @@ public class StudentController {
         model.addAttribute("students", students);
         return "students";
     }
-
 
     @RequestMapping("/update/{studentId}")
     public String update(@PathVariable Integer studentId) {
