@@ -40,6 +40,10 @@
         <div class="mb-3">
             <label for="image" class="form-label">Image :</label>
             <input type="file" id="image" name="image" class="form-control" />
+            <!-- Affichage du nom de l'image existante si elle existe -->
+            <div th:if="${student.image != null}" class="form-text">
+                Image actuelle : <span th:text="${student.image}"></span>
+            </div>
         </div>
 
         <button type="submit" class="ms-auto mt-4 btn btn-dark" th:text="${student.getId() != null ? 'Modifier' : 'Ajouter'}"></button>

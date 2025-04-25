@@ -66,17 +66,42 @@ public class StudentController {
             BindingResult bindingResult,
             @RequestParam("image")MultipartFile image
     ) throws IOException {
+
+        if (bindingResult.hasErrors()) {
+            return "inscription";
+        }
+        // Traiter l'image seulement si elle existe
+        if (!image.isEmpty()) {
+            Path destination = Paths.get(location).resolve(image.getOriginalFilename()).toAbsolutePath();
+            student.setImage(image.getOriginalFilename());
+            try (InputStream inputStream = image.getInputStream()) {
+                Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } else {
+            // Si l'image est vide, on laisse l'attribut "image" à null (ou ce qui est approprié)
+            student.setImage(null);
+        }
+        studentService.addOrUpdateStudent(student);
+        return "redirect:/students";
+
+//        if (!image.isEmpty()) {
+//            Path destination = Paths.get(location).resolve(image.getOriginalFilename()).toAbsolutePath();
+//            student.setImage(image.getOriginalFilename());
+//            InputStream inputStream = image.getInputStream();
+//            Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
+//            studentService.addOrUpdateStudent(student);
+//            return "redirect:/students";
+//        }
+//
 //        if (bindingResult.hasErrors()) {
 //            return "inscription";
 //        }
-
-        Path destination = Paths.get(location).resolve(image.getOriginalFilename()).toAbsolutePath();
-        student.setImage(image.getOriginalFilename());
-        InputStream inputStream = image.getInputStream();
-        Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
-        studentService.addOrUpdateStudent(student);
-
-        return "redirect:/students";
+//
+//        if (image.isEmpty()) {
+//            studentService.addOrUpdateStudent(student);
+//            return "redirect:/students";
+//        }
+//        return "redirect:/students";
     }
 
     @RequestMapping("/students")
@@ -98,6 +123,7 @@ public class StudentController {
 
     @RequestMapping("/update/{studentId}")
     public String update(@PathVariable Integer studentId) {
+
         return "redirect:/form?studentId=" + studentId;
     }
 
